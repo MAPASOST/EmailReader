@@ -240,8 +240,8 @@ class EmailReaderApp:
         """Show the setup wizard dialog."""
         wizard = tk.Toplevel(self.root)
         wizard.title("Setup Wizard")
-        wizard.geometry("600x550")
-        wizard.resizable(False, False)
+        wizard.geometry("600x700")
+        wizard.resizable(True, True)
         wizard.transient(self.root)
         wizard.grab_set()
 
@@ -446,7 +446,7 @@ class EmailReaderApp:
             cursor='hand2',
             command=save_and_close
         )
-        save_btn.pack(pady=10)
+        save_btn.pack(pady=20, fill='x')
 
     def update_status(self):
         """Update the status label."""
