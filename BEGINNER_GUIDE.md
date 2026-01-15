@@ -79,18 +79,45 @@ sudo apt-get install python3 python3-venv python3-pip
 
 When you first open Email Reader, you'll see a setup wizard. You need to enter:
 
-### 1. Your Email Address
-Just type your Outlook or Office 365 email address (e.g., `yourname@outlook.com`)
+### 1. Email Provider
+Select your email provider from the dropdown:
+- **Gmail** - For Gmail and Google Workspace accounts
+- **Outlook** - For Outlook, Hotmail, and Office 365 accounts
+- **Yahoo** - For Yahoo Mail accounts
+- **iCloud** - For Apple iCloud Mail accounts
 
-### 2. Your Email Password
-- Type your email password
-- **If you have 2-factor authentication**, you'll need an "app password" instead:
+The app will automatically configure the correct server settings for your provider!
+
+### 2. Your Email Address
+Type your full email address (e.g., `yourname@gmail.com` or `you@yourcompany.org`)
+
+### 3. Your Email Password
+- For **Gmail**: You MUST use an App Password (not your regular password)
+  1. Go to https://myaccount.google.com/apppasswords
+  2. Select "Mail" and your device
+  3. Click "Generate"
+  4. Use the 16-character password it gives you
+
+- For **Outlook/Office 365** with 2FA: Create an app-specific password
   1. Go to your Microsoft account security settings
   2. Look for "App passwords"
   3. Create a new app password for "Email Reader"
   4. Use that password instead of your regular password
 
-### 3. Anthropic API Key (for AI)
+- For **Yahoo**: You MUST use an App Password
+  1. Go to your Yahoo Account Security page
+  2. Generate an app password
+  3. Use that instead of your regular password
+
+- For **iCloud**: You MUST use an App-Specific Password
+  1. Go to appleid.apple.com
+  2. Sign in and go to Security
+  3. Generate an app-specific password
+  4. Use that instead of your regular password
+
+**Note:** If you don't have 2FA enabled and use your regular password, it might work, but app passwords are more secure and reliable!
+
+### 4. Anthropic API Key (for AI)
 This is what makes the smart summaries!
 
 **How to get it:**
@@ -102,7 +129,7 @@ This is what makes the smart summaries!
 
 **Cost:** Very cheap! Usually costs less than $0.10 per day (about $3/month).
 
-### 4. What time do you want the summary?
+### 5. What time do you want the summary?
 - Type the time in 24-hour format
 - Examples:
   - `08:00` = 8:00 AM
@@ -149,8 +176,8 @@ Click this to see instructions for making it run automatically every day.
 
 ### Q: Is this safe? Won't someone see my passwords?
 **A:** All your passwords and API keys stay on YOUR computer. They're stored in a file called `.env` that only you can see. Nothing is sent anywhere except:
-- Your email credentials go to Microsoft (to read your emails)
-- Your email content goes to Anthropic (to create the summary)
+- Your email credentials go to your email provider (Gmail, Outlook, etc.) to read your emails
+- Your email content goes to Anthropic (to create the AI summary)
 
 Both are legitimate, secure companies.
 
@@ -178,8 +205,8 @@ They give you $5 free credit when you sign up, which lasts about 2 months!
    - **API error**: Check your Anthropic API key is correct
    - **No emails found**: The program looks at the last 24 hours - if you haven't received emails in that time, you'll see this message
 
-### Q: Can I use Gmail instead of Outlook?
-**A:** The current version is set up for Outlook/Office 365. Gmail requires different settings. If you need Gmail support, ask in the issues section!
+### Q: Which email providers are supported?
+**A:** We support Gmail, Outlook/Office 365, Yahoo Mail, and iCloud! Just select your provider from the dropdown during setup and the app will configure everything automatically. If you use a custom domain (like @yourcompany.com), it's likely hosted by one of these providers - try Gmail or Outlook settings.
 
 ### Q: Will this work on my old computer?
 **A:** As long as you can install Python and have an internet connection, yes!
@@ -197,9 +224,10 @@ They give you $5 free credit when you sign up, which lasts about 2 months!
 - Try running the installer again
 
 ### "Could not connect to email"
-- Check your email address and password
-- If you have 2-factor authentication, use an app password
-- Make sure you're using Outlook/Office 365 (not Gmail)
+- Check your email address and password are correct
+- Make sure you selected the right email provider
+- If you have 2-factor authentication (most people do), you MUST use an app-specific password, not your regular password
+- For custom domains (like @company.org), try both Gmail and Outlook settings to see which one your company uses
 
 ### "API key is invalid"
 - Go to https://console.anthropic.com/

@@ -38,12 +38,22 @@ class EmailReaderApp:
             return {
                 'email_address': os.getenv('EMAIL_ADDRESS', ''),
                 'email_password': os.getenv('EMAIL_PASSWORD', ''),
+                'email_provider': os.getenv('EMAIL_PROVIDER', 'outlook'),
+                'imap_server': os.getenv('IMAP_SERVER', 'outlook.office365.com'),
+                'imap_port': os.getenv('IMAP_PORT', '993'),
+                'smtp_server': os.getenv('SMTP_SERVER', 'smtp.office365.com'),
+                'smtp_port': os.getenv('SMTP_PORT', '587'),
                 'anthropic_api_key': os.getenv('ANTHROPIC_API_KEY', ''),
                 'summary_time': os.getenv('SUMMARY_TIME', '08:00'),
             }
         return {
             'email_address': '',
             'email_password': '',
+            'email_provider': 'outlook',
+            'imap_server': 'outlook.office365.com',
+            'imap_port': '993',
+            'smtp_server': 'smtp.office365.com',
+            'smtp_port': '587',
             'anthropic_api_key': '',
             'summary_time': '08:00',
         }
@@ -66,6 +76,11 @@ class EmailReaderApp:
         # Update values
         set_key('.env', 'EMAIL_ADDRESS', self.config['email_address'])
         set_key('.env', 'EMAIL_PASSWORD', self.config['email_password'])
+        set_key('.env', 'EMAIL_PROVIDER', self.config['email_provider'])
+        set_key('.env', 'IMAP_SERVER', self.config['imap_server'])
+        set_key('.env', 'IMAP_PORT', str(self.config['imap_port']))
+        set_key('.env', 'SMTP_SERVER', self.config['smtp_server'])
+        set_key('.env', 'SMTP_PORT', str(self.config['smtp_port']))
         set_key('.env', 'ANTHROPIC_API_KEY', self.config['anthropic_api_key'])
         set_key('.env', 'SUMMARY_TIME', self.config['summary_time'])
 
@@ -257,8 +272,76 @@ class EmailReaderApp:
         )
         instructions.pack(anchor='w', pady=(0, 15))
 
+        # Email Provider Selection
+        tk.Label(content, text="📮 Email Provider:", font=('Arial', 10, 'bold'), bg='#f0f0f0').pack(anchor='w')
+
+        provider_frame = tk.Frame(content, bg='#f0f0f0')
+        provider_frame.pack(anchor='w', pady=(5, 15), fill='x')
+
+        provider_var = tk.StringVar(value=self.config.get('email_provider', 'outlook'))
+
+        # Provider settings dictionary
+        provider_settings = {
+            'gmail': {
+                'imap_server': 'imap.gmail.com',
+                'imap_port': '993',
+                'smtp_server': 'smtp.gmail.com',
+                'smtp_port': '587',
+                'note': 'Use an App Password (not your regular password)'
+            },
+            'outlook': {
+                'imap_server': 'outlook.office365.com',
+                'imap_port': '993',
+                'smtp_server': 'smtp.office365.com',
+                'smtp_port': '587',
+                'note': 'Works with @outlook.com, @hotmail.com, and Office 365'
+            },
+            'yahoo': {
+                'imap_server': 'imap.mail.yahoo.com',
+                'imap_port': '993',
+                'smtp_server': 'smtp.mail.yahoo.com',
+                'smtp_port': '587',
+                'note': 'Use an App Password (not your regular password)'
+            },
+            'icloud': {
+                'imap_server': 'imap.mail.me.com',
+                'imap_port': '993',
+                'smtp_server': 'smtp.mail.me.com',
+                'smtp_port': '587',
+                'note': 'Use an App-Specific Password'
+            }
+        }
+
+        # Provider dropdown
+        provider_dropdown = ttk.Combobox(
+            provider_frame,
+            textvariable=provider_var,
+            values=['gmail', 'outlook', 'yahoo', 'icloud'],
+            state='readonly',
+            font=('Arial', 11),
+            width=20
+        )
+        provider_dropdown.pack(side='left', padx=(0, 10))
+
+        # Provider note label
+        provider_note = tk.Label(
+            provider_frame,
+            text=provider_settings[provider_var.get()]['note'],
+            font=('Arial', 8),
+            bg='#f0f0f0',
+            fg='#888'
+        )
+        provider_note.pack(side='left')
+
+        # Update note when provider changes
+        def on_provider_change(event):
+            selected = provider_var.get()
+            provider_note.config(text=provider_settings[selected]['note'])
+
+        provider_dropdown.bind('<<ComboboxSelected>>', on_provider_change)
+
         # Email Address
-        tk.Label(content, text="📧 Your Outlook/Office 365 Email:", font=('Arial', 10, 'bold'), bg='#f0f0f0').pack(anchor='w')
+        tk.Label(content, text="📧 Your Email Address:", font=('Arial', 10, 'bold'), bg='#f0f0f0').pack(anchor='w')
         email_entry = tk.Entry(content, font=('Arial', 11), width=50)
         email_entry.insert(0, self.config['email_address'])
         email_entry.pack(fill='x', pady=(5, 15))
@@ -319,6 +402,14 @@ class EmailReaderApp:
             self.config['anthropic_api_key'] = api_entry.get().strip()
             self.config['summary_time'] = time_entry.get().strip()
 
+            # Get provider and set server settings
+            selected_provider = provider_var.get()
+            self.config['email_provider'] = selected_provider
+            self.config['imap_server'] = provider_settings[selected_provider]['imap_server']
+            self.config['imap_port'] = provider_settings[selected_provider]['imap_port']
+            self.config['smtp_server'] = provider_settings[selected_provider]['smtp_server']
+            self.config['smtp_port'] = provider_settings[selected_provider]['smtp_port']
+
             if not all([self.config['email_address'], self.config['email_password'], self.config['anthropic_api_key']]):
                 messagebox.showerror("Missing Information", "Please fill in all fields!")
                 return
@@ -376,8 +467,8 @@ class EmailReaderApp:
                 reader = EmailReader(
                     email_address=self.config['email_address'],
                     password=self.config['email_password'],
-                    imap_server='outlook.office365.com',
-                    imap_port=993
+                    imap_server=self.config['imap_server'],
+                    imap_port=int(self.config['imap_port'])
                 )
 
                 if reader.connect():

@@ -14,6 +14,7 @@ An automated email summary tool that reads your emails every 24 hours and sends 
 3. **Mac/Linux**: Run `./INSTALL_MAC_LINUX.sh` then `./START_MAC_LINUX.sh`
 
 You'll get a friendly window where you can:
+- Select your email provider (Gmail, Outlook, Yahoo, iCloud)
 - Enter your email and credentials with a simple form
 - Test if everything works with one click
 - Send summaries instantly with one button
@@ -26,18 +27,23 @@ Continue reading below for the technical documentation and command-line usage.
 
 ## Features
 
-- Automatically reads emails from your Outlook/Office 365 account
-- Uses Claude AI to create intelligent, organized summaries
-- Sends a nicely formatted HTML summary email every morning at 8am
-- Highlights important emails and groups similar ones together
-- Identifies emails requiring urgent attention
-- Runs locally on your machine with full privacy control
+- **Multi-Provider Support**: Works with Gmail, Outlook/Office 365, Yahoo Mail, and iCloud
+- **AI-Powered Summaries**: Uses Claude AI to create intelligent, organized summaries
+- **Automatic Scheduling**: Sends a summary email every morning at 8am (configurable)
+- **Smart Organization**: Highlights important emails and groups similar ones together
+- **Action Items**: Identifies emails requiring urgent attention
+- **Privacy First**: Runs locally on your machine with full privacy control
+- **Easy Setup**: Beginner-friendly GUI with one-click installers
 
 ## Prerequisites
 
 - Python 3.8 or higher
-- Outlook/Office 365 email account
-- Anthropic API key (for Claude AI)
+- Email account with one of these providers:
+  - Gmail / Google Workspace
+  - Outlook / Office 365 / Hotmail
+  - Yahoo Mail
+  - iCloud Mail
+- Anthropic API key (for Claude AI - free credits available)
 
 ## Installation
 
