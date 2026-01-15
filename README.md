@@ -2,6 +2,28 @@
 
 An automated email summary tool that reads your emails every 24 hours and sends you an AI-powered summary at 8am daily.
 
+---
+
+## 🎯 NEW! Simple Interface for Everyone
+
+**Not a programmer?** No problem! We now have a simple point-and-click interface!
+
+### For Beginners (No Coding Required):
+1. Read the **[BEGINNER_GUIDE.md](BEGINNER_GUIDE.md)** - Simple instructions in plain English
+2. **Windows**: Run `INSTALL_WINDOWS.bat` then `START_WINDOWS.bat`
+3. **Mac/Linux**: Run `./INSTALL_MAC_LINUX.sh` then `./START_MAC_LINUX.sh`
+
+You'll get a friendly window where you can:
+- Enter your email and credentials with a simple form
+- Test if everything works with one click
+- Send summaries instantly with one button
+- Set up automatic daily sending with easy instructions
+
+### For Developers:
+Continue reading below for the technical documentation and command-line usage.
+
+---
+
 ## Features
 
 - Automatically reads emails from your Outlook/Office 365 account
