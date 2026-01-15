@@ -27,7 +27,7 @@ Continue reading below for the technical documentation and command-line usage.
 
 ## Features
 
-- **Multi-Provider Support**: Works with Gmail, Outlook/Office 365, Yahoo Mail, and iCloud
+- **Multi-Provider Support**: Works with Gmail, Outlook/Office 365, Yahoo Mail, iCloud, and GoDaddy
 - **AI-Powered Summaries**: Uses Claude AI to create intelligent, organized summaries
 - **Automatic Scheduling**: Sends a summary email every morning at 8am (configurable)
 - **Smart Organization**: Highlights important emails and groups similar ones together
@@ -43,6 +43,7 @@ Continue reading below for the technical documentation and command-line usage.
   - Outlook / Office 365 / Hotmail
   - Yahoo Mail
   - iCloud Mail
+  - GoDaddy Email Hosting
 - Anthropic API key (for Claude AI - free credits available)
 
 ## Installation

@@ -85,6 +85,7 @@ Select your email provider from the dropdown:
 - **Outlook** - For Outlook, Hotmail, and Office 365 accounts
 - **Yahoo** - For Yahoo Mail accounts
 - **iCloud** - For Apple iCloud Mail accounts
+- **GoDaddy** - For GoDaddy email hosting
 
 The app will automatically configure the correct server settings for your provider!
 
@@ -114,6 +115,11 @@ Type your full email address (e.g., `yourname@gmail.com` or `you@yourcompany.org
   2. Sign in and go to Security
   3. Generate an app-specific password
   4. Use that instead of your regular password
+
+- For **GoDaddy**: Use your regular email password
+  1. Log into your GoDaddy Workspace Webmail
+  2. Use the same password you use to check your email
+  3. If you have issues, make sure IMAP access is enabled in your GoDaddy email settings
 
 **Note:** If you don't have 2FA enabled and use your regular password, it might work, but app passwords are more secure and reliable!
 
@@ -206,7 +212,7 @@ They give you $5 free credit when you sign up, which lasts about 2 months!
    - **No emails found**: The program looks at the last 24 hours - if you haven't received emails in that time, you'll see this message
 
 ### Q: Which email providers are supported?
-**A:** We support Gmail, Outlook/Office 365, Yahoo Mail, and iCloud! Just select your provider from the dropdown during setup and the app will configure everything automatically. If you use a custom domain (like @yourcompany.com), it's likely hosted by one of these providers - try Gmail or Outlook settings.
+**A:** We support Gmail, Outlook/Office 365, Yahoo Mail, iCloud, and GoDaddy! Just select your provider from the dropdown during setup and the app will configure everything automatically. If you use a custom domain (like @yourcompany.com), it's likely hosted by one of these providers - try the appropriate settings based on who hosts your email.
 
 ### Q: Will this work on my old computer?
 **A:** As long as you can install Python and have an internet connection, yes!

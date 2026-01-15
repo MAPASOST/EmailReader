@@ -309,6 +309,13 @@ class EmailReaderApp:
                 'smtp_server': 'smtp.mail.me.com',
                 'smtp_port': '587',
                 'note': 'Use an App-Specific Password'
+            },
+            'godaddy': {
+                'imap_server': 'imap.secureserver.net',
+                'imap_port': '993',
+                'smtp_server': 'smtpout.secureserver.net',
+                'smtp_port': '465',
+                'note': 'Use your regular email password'
             }
         }
 
@@ -316,7 +323,7 @@ class EmailReaderApp:
         provider_dropdown = ttk.Combobox(
             provider_frame,
             textvariable=provider_var,
-            values=['gmail', 'outlook', 'yahoo', 'icloud'],
+            values=['gmail', 'outlook', 'yahoo', 'icloud', 'godaddy'],
             state='readonly',
             font=('Arial', 11),
             width=20
