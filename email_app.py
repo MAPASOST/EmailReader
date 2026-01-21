@@ -1,6 +1,18 @@
 """
 Simple GUI application for Email Reader - No coding required!
 """
+# First, check and install dependencies
+print("Checking dependencies...")
+try:
+    from auto_install import check_and_install_dependencies
+    if not check_and_install_dependencies():
+        print("Failed to install some dependencies. Please run: pip install -r requirements.txt")
+        input("Press Enter to exit...")
+        exit(1)
+except Exception as e:
+    print(f"Error checking dependencies: {e}")
+
+# Now import everything else
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
 import os
