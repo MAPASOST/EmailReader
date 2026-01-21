@@ -5,8 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Dict
 from azure.identity import ClientSecretCredential
 from msgraph import GraphServiceClient
-from msgraph.generated.users.item.messages.messages_request_builder import MessagesRequestBuilder
-from kiota_abstractions.base_request_configuration import RequestConfiguration
+import asyncio
 
 
 class GraphEmailReader:
@@ -50,17 +49,13 @@ class GraphEmailReader:
         """Disconnect from Microsoft Graph API."""
         self.client = None
 
-    def fetch_emails_last_24h(self) -> List[Dict]:
+    async def _fetch_emails_async(self) -> List[Dict]:
         """
-        Fetch emails from the last 24 hours using Microsoft Graph API.
+        Async function to fetch emails from the last 24 hours.
 
         Returns:
-            List of email dictionaries with subject, sender, date, and body
+            List of email dictionaries
         """
-        if not self.client:
-            if not self.connect():
-                return []
-
         emails = []
 
         try:
@@ -68,21 +63,12 @@ class GraphEmailReader:
             yesterday = datetime.now(timezone.utc) - timedelta(days=1)
             filter_query = f"receivedDateTime ge {yesterday.isoformat()}"
 
-            # Configure the request
-            query_params = MessagesRequestBuilder.MessagesRequestBuilderGetQueryParameters(
+            # Get messages with filter
+            messages = await self.client.users.by_user_id(self.user_email).messages.get(
                 filter=filter_query,
-                select=['subject', 'from', 'receivedDateTime', 'bodyPreview', 'body'],
+                select=['subject', 'from', 'receivedDateTime', 'bodyPreview'],
                 orderby=['receivedDateTime DESC'],
-                top=100  # Limit to 100 most recent emails
-            )
-
-            request_config = RequestConfiguration(
-                query_parameters=query_params
-            )
-
-            # Get messages
-            messages = self.client.users.by_user_id(self.user_email).messages.get(
-                request_configuration=request_config
+                top=100
             )
 
             if messages and messages.value:
@@ -90,10 +76,15 @@ class GraphEmailReader:
                     try:
                         # Extract email details
                         subject = msg.subject or ""
-                        sender = msg.from_property.email_address.address if msg.from_property and msg.from_property.email_address else ""
-                        sender_name = msg.from_property.email_address.name if msg.from_property and msg.from_property.email_address else ""
-                        if sender_name:
-                            sender = f"{sender_name} <{sender}>"
+
+                        sender = ""
+                        if msg.from_property and msg.from_property.email_address:
+                            sender_addr = msg.from_property.email_address.address or ""
+                            sender_name = msg.from_property.email_address.name or ""
+                            if sender_name:
+                                sender = f"{sender_name} <{sender_addr}>"
+                            else:
+                                sender = sender_addr
 
                         date = msg.received_date_time or datetime.now(timezone.utc)
 
@@ -117,5 +108,27 @@ class GraphEmailReader:
 
         except Exception as e:
             print(f"Error fetching emails via Graph API: {e}")
+            import traceback
+            traceback.print_exc()
 
         return emails
+
+    def fetch_emails_last_24h(self) -> List[Dict]:
+        """
+        Fetch emails from the last 24 hours using Microsoft Graph API.
+
+        Returns:
+            List of email dictionaries with subject, sender, date, and body
+        """
+        if not self.client:
+            if not self.connect():
+                return []
+
+        # Run the async function
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        return loop.run_until_complete(self._fetch_emails_async())

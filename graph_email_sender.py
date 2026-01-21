@@ -9,6 +9,7 @@ from msgraph.generated.models.item_body import ItemBody
 from msgraph.generated.models.body_type import BodyType
 from msgraph.generated.models.recipient import Recipient
 from msgraph.generated.models.email_address import EmailAddress
+import asyncio
 
 
 class GraphEmailSender:
@@ -48,21 +49,17 @@ class GraphEmailSender:
             print(f"Failed to connect to Microsoft Graph: {e}")
             return False
 
-    def send_summary(self, to_address: str, summary_html: str) -> bool:
+    async def _send_email_async(self, to_address: str, summary_html: str) -> bool:
         """
-        Send the email summary using Microsoft Graph API.
+        Async function to send email via Graph API.
 
         Args:
             to_address: Recipient email address
-            summary_html: HTML content of the summary
+            summary_html: HTML content
 
         Returns:
-            True if email sent successfully, False otherwise
+            True if successful
         """
-        if not self.client:
-            if not self.connect():
-                return False
-
         try:
             # Create the message
             message = Message()
@@ -80,7 +77,7 @@ class GraphEmailSender:
             message.to_recipients = [to_recipient]
 
             # Send the message
-            self.client.users.by_user_id(self.user_email).send_mail.post(
+            await self.client.users.by_user_id(self.user_email).send_mail.post(
                 body={
                     "message": message,
                     "saveToSentItems": True
@@ -92,4 +89,30 @@ class GraphEmailSender:
 
         except Exception as e:
             print(f"Failed to send email via Graph API: {e}")
+            import traceback
+            traceback.print_exc()
             return False
+
+    def send_summary(self, to_address: str, summary_html: str) -> bool:
+        """
+        Send the email summary using Microsoft Graph API.
+
+        Args:
+            to_address: Recipient email address
+            summary_html: HTML content of the summary
+
+        Returns:
+            True if email sent successfully, False otherwise
+        """
+        if not self.client:
+            if not self.connect():
+                return False
+
+        # Run the async function
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        return loop.run_until_complete(self._send_email_async(to_address, summary_html))
